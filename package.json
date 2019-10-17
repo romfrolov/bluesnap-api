@@ -4,8 +4,7 @@
   "description": "BlueSnap API wrapper",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_PATH=. mocha test",
-    "codecov": "nyc npm test && nyc report --reporter=text-lcov",
+    "test": "mocha",
     "docs": "jsdoc -c .jsdocrc",
     "http-docs": "PORT=${PORT:-8080}; http-server -p $PORT docs"
   },
@@ -24,9 +23,9 @@
     "chai": "^4.2.0",
     "coveralls": "^3.0.7",
     "http-server": "^0.11.1",
+    "istanbul": "^0.4.5",
     "jsdoc": "^3.6.3",
     "mocha": "^6.2.1",
-    "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^14.1.1"
+    "mocha-lcov-reporter": "^1.3.0"
   }
 }
