@@ -1,6 +1,6 @@
 # BlueSnap API Wrapper (Node.js)
 
-![](https://github.com/romfrolov/bluesnap-api-node/workflows/build/badge.svg)
+![](https://github.com/romfrolov/bluesnap-api-node/workflows/build/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/romfrolov/bluesnap-api-node/badge.svg?branch=master)](https://coveralls.io/github/romfrolov/bluesnap-api-node?branch=master)
 
 This wrapper library gives access to the API of the global payment gateway - BlueSnap.
 
