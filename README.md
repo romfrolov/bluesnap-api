@@ -42,6 +42,12 @@ TBD
 
 TBD
 
+### Wallets
+
+#### wallets
+
+TBD
+
 ## Documentation
 
 ```bash
