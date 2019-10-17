@@ -8,6 +8,38 @@ TBD
 
 ## API
 
+### Transactions
+
+#### transactions
+
+TBD
+
+### Refunds
+
+#### refunds
+
+TBD
+
+### Vaulted Shoppers
+
+#### vaultedShoppers
+
+TBD
+
+### Subscriptions
+
+#### plans
+
+TBD
+
+#### subscriptions
+
+TBD
+
+### Marketplace
+
+#### vendors
+
 TBD
 
 ## Documentation
