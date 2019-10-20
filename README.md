@@ -28,7 +28,7 @@ const BlueSnap = require('bluesnap-api');
 
 ## API
 
-### Transactions (inc. Refunds)
+### Transactions (incl. Refunds)
 
 #### transactions
 
