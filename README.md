@@ -15,7 +15,7 @@ const BlueSnap = require('bluesnap-api');
 
 (async () => {
 
-    // Initialize BlueSnap Gateway client.
+    // Initialize BlueSnap gateway.
     const bsg = BlueSnap({username: 'myusername', password: 'mypassword'});
 
     // Create vendor.
