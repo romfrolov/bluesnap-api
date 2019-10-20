@@ -45,3 +45,9 @@ Transactions.prototype.get = function get(transactionId) {
 
     return this.http.get(path);
 };
+
+Transactions.prototype.refund = function refund(transactionId) {
+    const path = `/services/2/transactions/${transactionId}/refund`;
+
+    return this.http.put(path);
+};

@@ -10,15 +10,9 @@ TBD
 
 ## API
 
-### Transactions
+### Transactions (inc. Refunds)
 
 #### transactions
-
-TBD
-
-### Refunds
-
-#### refunds
 
 TBD
 
