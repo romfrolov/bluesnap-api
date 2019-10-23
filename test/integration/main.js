@@ -8,8 +8,8 @@ const BlueSnap = require('../../lib/bluesnap-api');
 const mocked = (!process.env.USERNAME || !process.env.PASSWORD);
 
 const config = {
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD
+    username: process.env.USERNAME || 'test',
+    password: process.env.PASSWORD || 'test'
 };
 
 describe('C2B transaction', () => {
