@@ -1,3 +1,9 @@
+/**
+ * Generic integration test.
+ *
+ * @module test/integration
+ */
+
 'use strict';
 
 require('dotenv').config({path: './test/.env'});
@@ -12,7 +18,16 @@ const config = {
     password: process.env.PASSWORD || 'test'
 };
 
-describe('C2B transaction', () => {
+/**
+ * Wrapper on top of @method console.log to print logs only if needed.
+ *
+ * @param {Object[]} args
+ */
+function log(...args) {
+    process.env.VERBOSE && console.log(...args);
+}
+
+describe('BlueSnap API', () => {
     let bsg;
     let vendorId;
 
@@ -22,26 +37,101 @@ describe('C2B transaction', () => {
 
     it('create vendor', async () => {
         if (mocked) {
-            sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/123'}}));
+            sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/1'}}));
         }
 
         vendorId = await bsg.vendors.create({email: 'vendor@example.com', country: 'RU'});
 
-        console.log('Vendor ID:', vendorId);
+        log('Created vendor ID:', vendorId);
 
         if (mocked) {
             bsg.http.post.restore();
         }
     });
 
+    it('retrieve vendor', async () => {
+        if (mocked) {
+            sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+        }
+
+        const response = await bsg.vendors.get(vendorId);
+
+        log('Retrieved vendor:', response);
+
+        if (mocked) {
+            bsg.http.get.restore();
+        }
+    });
+
+    it('list vendors', async () => {
+        if (mocked) {
+            sinon.stub(bsg.http, 'get').callsFake(async () => ([]));
+        }
+
+        const response = await bsg.vendors.list();
+
+        log('Listed vendors:', response);
+
+        if (mocked) {
+            bsg.http.get.restore();
+        }
+    });
+
     describe('C2B transaction', () => {
+        let vaultedShopperId;
         let transactionId;
+
+        it('create vaulted shopper', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({vaultedShopperId: 1}));
+            }
+
+            const vaultedShopper = {
+                firstName: 'First name',
+                lastName:  'Last name',
+                paymentSource: {
+                    creditCardInfo: {
+                        creditCard: {
+                            expirationYear:  2023,
+                            securityCode:    837,
+                            expirationMonth: '02',
+                            cardNumber:      4263982640269299
+                        }
+                    }
+                }
+            };
+
+            const response = await bsg.vaultedShoppers.create(vaultedShopper);
+
+            vaultedShopperId = response.vaultedShopperId;
+
+            log('Created vaulted shopper:', response);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        it('retrieve vaulted shopper', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.vaultedShoppers.get(vaultedShopperId);
+
+            log('Retrieved vaulted shopper:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
 
         it('auth', async () => {
             if (mocked) {
-                sinon.stub(bsg.http, 'post').callsFake(async () => ({transactionId: '123'}));
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({transactionId: 1}));
             }
 
+            // TODO Use vaulted shopper.
             const cardTransaction = {
                 amount: 1,
                 currency: 'RUB',
@@ -58,10 +148,24 @@ describe('C2B transaction', () => {
 
             transactionId = response.transactionId;
 
-            console.log('Transaction ID:', transactionId);
+            log('Authorized transaction ID:', transactionId);
 
             if (mocked) {
                 bsg.http.post.restore();
+            }
+        });
+
+        it('retrieve transaction', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.transactions.get(transactionId);
+
+            log('Retrieved transaction:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
             }
         });
 
@@ -77,7 +181,7 @@ describe('C2B transaction', () => {
 
             const transaction = await bsg.transactions.capture(cardTransaction);
 
-            console.log('Transaction:', transaction);
+            log('Captured transaction:', transaction);
 
             if (mocked) {
                 bsg.http.put.restore();
@@ -87,10 +191,11 @@ describe('C2B transaction', () => {
 
     describe('Subscription', () => {
         let planId;
+        let subscriptionId;
 
         it('create plan', async () => {
             if (mocked) {
-                sinon.stub(bsg.http, 'post').callsFake(async () => ({planId: '123'}));
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({planId: 1}));
             }
 
             const plan = {
@@ -104,16 +209,44 @@ describe('C2B transaction', () => {
 
             planId = response.planId;
 
-            console.log('Create plan response:', response);
+            log('Create plan response:', response);
 
             if (mocked) {
                 bsg.http.post.restore();
             }
         });
 
+        it('retrieve plan', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.plans.get(planId);
+
+            log('Retrieved plan:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+
+        it('list plans', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ([]));
+            }
+
+            const response = await bsg.plans.list();
+
+            log('Listed plans:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+
         it('create subscription', async () => {
             if (mocked) {
-                sinon.stub(bsg.http, 'post').callsFake(async () => ({}));
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({subscriptionId: 1}));
             }
 
             const subscription = {
@@ -121,7 +254,6 @@ describe('C2B transaction', () => {
                     firstName: 'First name',
                     lastName:  'Last name'
                 },
-                vendorInfo: {vendorId},
                 planId,
                 paymentSource: {
                     creditCardInfo: {
@@ -137,10 +269,40 @@ describe('C2B transaction', () => {
 
             const response = await bsg.subscriptions.create(subscription);
 
-            console.log('Create subscription response:', response);
+            subscriptionId = response.subscriptionId;
+
+            log('Create subscription response:', response);
 
             if (mocked) {
                 bsg.http.post.restore();
+            }
+        });
+
+        it('retrieve subscription', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.subscriptions.get(subscriptionId);
+
+            log('Retrieved subscription:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+
+        it('list subscriptions', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ([]));
+            }
+
+            const response = await bsg.subscriptions.list();
+
+            log('Listed subscriptions:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
             }
         });
     });
