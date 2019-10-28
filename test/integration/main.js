@@ -27,60 +27,75 @@ function log(...args) {
     process.env.VERBOSE && console.log(...args);
 }
 
-describe('BlueSnap API', () => {
+describe('BlueSnap', () => {
     let bsg;
     let vendorId;
+    let planId;
+    let subscriptionId;
+    let vaultedShopperId;
+    let transactionId;
 
     it('initialize the gateway', () => {
         bsg = BlueSnap(config);
     });
 
-    it('create vendor', async () => {
-        if (mocked) {
-            sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/1'}}));
-        }
+    describe('Vendors API', () => {
+        it('create vendor', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/1'}}));
+            }
 
-        vendorId = await bsg.vendors.create({email: 'vendor@example.com', country: 'RU'});
+            vendorId = await bsg.vendors.create({email: 'vendor@example.com', country: 'RU'});
 
-        log('Created vendor ID:', vendorId);
+            log('Created vendor ID:', vendorId);
 
-        if (mocked) {
-            bsg.http.post.restore();
-        }
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        it('update vendor', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'put').callsFake(async () => ({}));
+            }
+
+            await bsg.vendors.update(vendorId, {email: 'vendor@example.com', country: 'RU'});
+
+            if (mocked) {
+                bsg.http.put.restore();
+            }
+        });
+
+        it('retrieve vendor', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.vendors.get(vendorId);
+
+            log('Retrieved vendor:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+
+        it('list vendors', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ([]));
+            }
+
+            const response = await bsg.vendors.list();
+
+            log('Listed vendors:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
     });
 
-    it('retrieve vendor', async () => {
-        if (mocked) {
-            sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
-        }
-
-        const response = await bsg.vendors.get(vendorId);
-
-        log('Retrieved vendor:', response);
-
-        if (mocked) {
-            bsg.http.get.restore();
-        }
-    });
-
-    it('list vendors', async () => {
-        if (mocked) {
-            sinon.stub(bsg.http, 'get').callsFake(async () => ([]));
-        }
-
-        const response = await bsg.vendors.list();
-
-        log('Listed vendors:', response);
-
-        if (mocked) {
-            bsg.http.get.restore();
-        }
-    });
-
-    describe('C2B transaction', () => {
-        let vaultedShopperId;
-        let transactionId;
-
+    describe('Vaulted Shoppers API', () => {
         it('create vaulted shopper', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'post').callsFake(async () => ({vaultedShopperId: 1}));
@@ -112,6 +127,37 @@ describe('BlueSnap API', () => {
             }
         });
 
+        it('update vaulted shopper', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'put').callsFake(async () => ({vaultedShopperId: 1}));
+            }
+
+            const vaultedShopper = {
+                firstName: 'First name',
+                lastName:  'Last name',
+                paymentSource: {
+                    creditCardInfo: {
+                        creditCard: {
+                            expirationYear:  2023,
+                            securityCode:    837,
+                            expirationMonth: '02',
+                            cardNumber:      4263982640269299
+                        }
+                    }
+                }
+            };
+
+            const response = await bsg.vaultedShoppers.update(vaultedShopperId, vaultedShopper);
+
+            vaultedShopperId = response.vaultedShopperId;
+
+            log('Updated vaulted shopper:', response);
+
+            if (mocked) {
+                bsg.http.put.restore();
+            }
+        });
+
         it('retrieve vaulted shopper', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
@@ -125,8 +171,10 @@ describe('BlueSnap API', () => {
                 bsg.http.get.restore();
             }
         });
+    });
 
-        it('auth', async () => {
+    describe('Transactions API', () => {
+        it('auth transaction', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'post').callsFake(async () => ({transactionId: 1}));
             }
@@ -169,7 +217,7 @@ describe('BlueSnap API', () => {
             }
         });
 
-        it('capture', async () => {
+        it('capture transaction', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'put').callsFake(async () => ({}));
             }
@@ -189,10 +237,7 @@ describe('BlueSnap API', () => {
         });
     });
 
-    describe('Subscription', () => {
-        let planId;
-        let subscriptionId;
-
+    describe('Plans API', () => {
         it('create plan', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'post').callsFake(async () => ({planId: 1}));
@@ -213,6 +258,29 @@ describe('BlueSnap API', () => {
 
             if (mocked) {
                 bsg.http.post.restore();
+            }
+        });
+
+        it('update plan', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'put').callsFake(async () => ({planId: 1}));
+            }
+
+            const plan = {
+                chargeFrequency:       'MONTHLY',
+                name:                  'Super Pro Plan',
+                currency:              'RUB',
+                recurringChargeAmount: 100
+            };
+
+            const response = await bsg.plans.update(planId, plan);
+
+            planId = response.planId;
+
+            log('Update plan response:', response);
+
+            if (mocked) {
+                bsg.http.put.restore();
             }
         });
 
@@ -243,7 +311,9 @@ describe('BlueSnap API', () => {
                 bsg.http.get.restore();
             }
         });
+    });
 
+    describe('Subscriptions API', () => {
         it('create subscription', async () => {
             if (mocked) {
                 sinon.stub(bsg.http, 'post').callsFake(async () => ({subscriptionId: 1}));
@@ -275,6 +345,22 @@ describe('BlueSnap API', () => {
 
             if (mocked) {
                 bsg.http.post.restore();
+            }
+        });
+
+        it('update subscription', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'put').callsFake(async () => ({subscriptionId: 1}));
+            }
+
+            const response = await bsg.subscriptions.update(subscriptionId, {planId});
+
+            subscriptionId = response.subscriptionId;
+
+            log('Update subscription response:', response);
+
+            if (mocked) {
+                bsg.http.put.restore();
             }
         });
 
