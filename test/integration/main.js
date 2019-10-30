@@ -34,6 +34,8 @@ describe('BlueSnap', () => {
     let subscriptionId;
     let vaultedShopperId;
     let transactionId;
+    let walletId;
+    let onboardingId;
 
     it('initialize the gateway', () => {
         bsg = BlueSnap(config);
@@ -386,6 +388,137 @@ describe('BlueSnap', () => {
             const response = await bsg.subscriptions.list();
 
             log('Listed subscriptions:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+    });
+
+    describe('Wallets API', () => {
+        it('create wallet (Apple Pay)', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({}));
+            }
+
+            const wallet = {
+                walletType:    'APPLE_PAY',
+                validationUrl: 'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession',
+                domainName:    'merchant.com'
+            };
+
+            const response = await bsg.wallets.create(wallet);
+
+            log('Created Apple Pay wallet:', response);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        it('create wallet (Masterpass)', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({}));
+            }
+
+            const wallet = {
+                walletType: 'MASTERPASS',
+                originUrl:  'http://www.originURL.com',
+                returnUrl:  'http://www.returnURL.com'
+            };
+
+            const response = await bsg.wallets.create(wallet);
+
+            log('Created Masterpass wallet:', response);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        // NOTE On 31.10.2019 this functionality doesn't work.
+        // StatusCodeError: 400
+        // "errorName":"WALLET_PROCESSING_FAILURE"
+        // "code":"23003"
+        // "description":"Wallet processor is currently unavailable, please try again later"
+        xit('create wallet (Visa Checkout)', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({walletId: 1}));
+            }
+
+            const wallet = {
+                callId:     5549711876630985101,
+                walletType: 'VISA_CHECKOUT'
+            };
+
+            const response = await bsg.wallets.create(wallet);
+
+            walletId = response.walletId;
+
+            log('Wallet ID:', walletId);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        xit('retrieve wallet', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.wallets.get(walletId);
+
+            log('Retrieved wallet:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+
+        it('Visa Checkout API key', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/1'}}));
+            }
+
+            const response = await bsg.wallets.visaCheckoutApiKey();
+
+            log('Visa checkout API key response:', response);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        it('onboard Apple Pay', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'post').callsFake(async () => ({headers: {location: 'url/1'}}));
+            }
+
+            const wallet = {
+                walletType: 'APPLE_PAY',
+                applePay: {
+                    domains: ['bluesnap.com']
+                }
+            };
+
+            onboardingId = await bsg.wallets.onboardApplePay(wallet);
+
+            log('Onboard ID:', onboardingId);
+
+            if (mocked) {
+                bsg.http.post.restore();
+            }
+        });
+
+        it('retrieve Apple Pay Onboarding info', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.wallets.getApplePayOnboardingInfo(onboardingId);
+
+            log('Apple Pay onboarding info:', response);
 
             if (mocked) {
                 bsg.http.get.restore();
