@@ -87,6 +87,12 @@ const BlueSnap = require('bluesnap-api');
 - `onboardApplePay` - onboard Apple Pay.
 - `getApplePayOnboardingInfo` - retrieve Apple Pay onboarding info.
 
+### Reporting
+
+#### reports
+
+- `get` - retrieve report data.
+
 ## Documentation
 
 ```bash

@@ -525,4 +525,20 @@ describe('BlueSnap', () => {
             }
         });
     });
+
+    describe('Reports API', () => {
+        it('get report with vendor details', async () => {
+            if (mocked) {
+                sinon.stub(bsg.http, 'get').callsFake(async () => ({}));
+            }
+
+            const response = await bsg.reports.get('VendorDetails');
+
+            log('Vendor details:', response);
+
+            if (mocked) {
+                bsg.http.get.restore();
+            }
+        });
+    });
 });
