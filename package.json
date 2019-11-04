@@ -1,6 +1,6 @@
 {
   "name": "bluesnap-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "BlueSnap API wrapper",
   "main": "index.js",
   "scripts": {
