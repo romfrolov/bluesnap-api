@@ -26,6 +26,12 @@ const BlueSnap = require('bluesnap-api');
 })();
 ```
 
+Constructor accepts one parameter - configuration object with following properties:
+- `username` {String} - username to use for authorization (from API Credentials).
+- `password` {String} - password to use for authorization (from API Credentials).
+- `isSandbox` {Boolean} (optional) - whether to use Sandbox or Production environment. Default: `true`.
+- `version` {String} (optional) - BlueSnap API version to use.
+
 ## API
 
 ### Transactions (incl. Refunds)
