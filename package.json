@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:romfrolov/bluesnap-api-node.git"
+    "url": "git@github.com:romfrolov/bluesnap-api.git"
   },
   "keywords": [],
   "author": "Roman Frolov <justcallmefrolov@gmail.com>",
