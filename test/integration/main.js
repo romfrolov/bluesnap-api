@@ -106,15 +106,17 @@ describe('BlueSnap', () => {
             const vaultedShopper = {
                 firstName: 'First name',
                 lastName:  'Last name',
-                paymentSource: {
-                    creditCardInfo: {
-                        creditCard: {
-                            expirationYear:  2023,
-                            securityCode:    837,
-                            expirationMonth: '02',
-                            cardNumber:      4263982640269299
+                paymentSources: {
+                    creditCardInfo: [
+                        {
+                            creditCard: {
+                                expirationYear:  '2023',
+                                securityCode:    '837',
+                                expirationMonth: '02',
+                                cardNumber:      '4263 9826 4026 9299'
+                            }
                         }
-                    }
+                    ]
                 }
             };
 
@@ -122,7 +124,7 @@ describe('BlueSnap', () => {
 
             vaultedShopperId = response.vaultedShopperId;
 
-            log('Created vaulted shopper:', response);
+            log('Created vaulted shopper:', JSON.stringify(response, null, 4));
 
             if (mocked) {
                 bsg.http.post.restore();
@@ -137,15 +139,17 @@ describe('BlueSnap', () => {
             const vaultedShopper = {
                 firstName: 'First name',
                 lastName:  'Last name',
-                paymentSource: {
-                    creditCardInfo: {
-                        creditCard: {
-                            expirationYear:  2023,
-                            securityCode:    837,
-                            expirationMonth: '02',
-                            cardNumber:      4263982640269299
+                paymentSources: {
+                    creditCardInfo: [
+                        {
+                            creditCard: {
+                                expirationYear:  '2023',
+                                securityCode:    '837',
+                                expirationMonth: '02',
+                                cardNumber:      '4111 1111 1111 1111'
+                            }
                         }
-                    }
+                    ]
                 }
             };
 
@@ -153,7 +157,7 @@ describe('BlueSnap', () => {
 
             vaultedShopperId = response.vaultedShopperId;
 
-            log('Updated vaulted shopper:', response);
+            log('Updated vaulted shopper:', JSON.stringify(response, null, 4));
 
             if (mocked) {
                 bsg.http.put.restore();
@@ -167,7 +171,7 @@ describe('BlueSnap', () => {
 
             const response = await bsg.vaultedShoppers.get(vaultedShopperId);
 
-            log('Retrieved vaulted shopper:', response);
+            log('Retrieved vaulted shopper:', JSON.stringify(response, null, 4));
 
             if (mocked) {
                 bsg.http.get.restore();
@@ -191,7 +195,8 @@ describe('BlueSnap', () => {
                     expirationMonth: '02',
                     cardNumber:      4263982640269299
                 },
-                cardTransactionType: 'AUTH_ONLY'
+                cardTransactionType: 'AUTH_ONLY',
+                vendorInfo: {vendorId}
             };
 
             const response = await bsg.transactions.authOnly(cardTransaction);
