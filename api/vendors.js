@@ -19,8 +19,7 @@ function Vendors(parent) {
 Vendors.prototype.create = function create(vendor) {
     const path = '/services/2/vendors';
 
-    return this.http.post(path, vendor, {resolveWithFullResponse: true})
-        .then(res => +res.headers['location'].split('/').pop());
+    return this.http.post(path, vendor, {retrieveIdFromHeaders: true});
 };
 
 Vendors.prototype.update = function update(vendorId, vendor) {
