@@ -6,7 +6,7 @@
 
 'use strict';
 
-const Error = require('lib/error');
+const Error = require('../lib/error');
 
 module.exports = Plans;
 
