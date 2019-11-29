@@ -6,6 +6,8 @@
 
 'use strict';
 
+const Error = require('lib/error');
+
 module.exports = Wallets;
 
 function Wallets(parent) {
@@ -17,12 +19,16 @@ function Wallets(parent) {
 }
 
 Wallets.prototype.create = function create(wallet) {
+    if (!wallet) { throw Error('wallet is missing'); }
+
     const path = '/services/2/wallets';
 
     return this.http.post(path, wallet);
 };
 
 Wallets.prototype.get = function get(walletId) {
+    if (!walletId) { throw Error('walletId is missing'); }
+
     const path = `/services/2/wallets/${walletId}`;
 
     return this.http.get(path);
@@ -35,12 +41,16 @@ Wallets.prototype.visaCheckoutApiKey = function visaCheckoutApiKey() {
 };
 
 Wallets.prototype.onboardApplePay = function onboardApplePay(wallet) {
+    if (!wallet) { throw Error('wallet is missing'); }
+
     const path = '/services/2/wallets/onboarding';
 
     return this.http.post(path, wallet, {retrieveIdFromHeaders: true});
 };
 
 Wallets.prototype.getApplePayOnboardingInfo = function getApplePayOnboardingInfo(onboardingId) {
+    if (!onboardingId) { throw Error('onboardingId is missing'); }
+
     const path = `/services/2/wallets/onboarding/${onboardingId}`;
 
     return this.http.get(path);

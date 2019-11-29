@@ -6,6 +6,8 @@
 
 'use strict';
 
+const Error = require('lib/error');
+
 module.exports = Plans;
 
 function Plans(parent) {
@@ -17,18 +19,25 @@ function Plans(parent) {
 }
 
 Plans.prototype.create = function create(plan) {
+    if (!plan) { throw Error('plan is missing'); }
+
     const path = '/services/2/recurring/plans';
 
     return this.http.post(path, plan);
 };
 
 Plans.prototype.update = function update(planId, plan) {
+    if (!planId) { throw Error('planId is missing'); }
+    if (!plan)   { throw Error('plan is missing');   }
+
     const path = `/services/2/recurring/plans/${planId}`;
 
     return this.http.put(path, plan);
 };
 
 Plans.prototype.get = function get(planId) {
+    if (!planId) { throw Error('planId is missing'); }
+
     const path = `/services/2/recurring/plans/${planId}`;
 
     return this.http.get(path);

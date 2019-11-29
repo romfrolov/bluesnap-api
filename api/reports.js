@@ -6,6 +6,8 @@
 
 'use strict';
 
+const Error = require('lib/error');
+
 module.exports = Reports;
 
 function Reports(parent) {
@@ -17,6 +19,8 @@ function Reports(parent) {
 }
 
 Reports.prototype.get = function get(reportCode, params) {
+    if (!reportCode) { throw Error('reportCode is missing'); }
+
     const path = `/services/2/report/${reportCode}`;
 
     return this.http.get(path, params);
