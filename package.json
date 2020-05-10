@@ -1,6 +1,6 @@
 {
   "name": "bluesnap-api",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "BlueSnap API wrapper",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "chai": "^4.2.0",
     "coveralls": "^3.0.7",
     "dotenv": "^8.2.0",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.3",
     "istanbul": "^0.4.5",
     "jsdoc": "^3.6.3",
     "mocha": "^6.2.1",
