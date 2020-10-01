@@ -1,6 +1,6 @@
 {
   "name": "bluesnap-api",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "BlueSnap API wrapper",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Roman Frolov <justcallmefrolov@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "qs": "^6.9.1"
   },
   "devDependencies": {
