@@ -16,7 +16,7 @@
   "author": "Roman Frolov <justcallmefrolov@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "qs": "^6.9.1"
   },
   "devDependencies": {
